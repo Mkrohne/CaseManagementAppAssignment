@@ -1,4 +1,5 @@
 ﻿using CaseManagementApp.Contexts;
+using CaseManagementApp.Models;
 using CaseManagementApp.Models.Entities;
 
 namespace CaseManagementApp.Services
@@ -49,7 +50,7 @@ namespace CaseManagementApp.Services
                 CreatedBy = $"{firstName} {lastName}"
             };
 
-            var newUser = new UserEntity
+            var newUser = new User
             {
                 FirstName = firstName ?? "",
                 LastName = lastName ?? "",

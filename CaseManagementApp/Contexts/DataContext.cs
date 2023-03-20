@@ -1,4 +1,5 @@
-﻿using CaseManagementApp.Models.Entities;
+﻿using CaseManagementApp.Models;
+using CaseManagementApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CaseManagementApp.Contexts
@@ -37,5 +38,6 @@ namespace CaseManagementApp.Contexts
 
         public DbSet<CaseEntity> Cases { get; set; } = null!;
         public DbSet<UserEntity> Users { get; set; } = null!;
+        public DbSet<User> User { get; set; } = null!;
     }
 }

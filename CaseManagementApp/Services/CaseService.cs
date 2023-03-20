@@ -1,4 +1,5 @@
 ﻿using CaseManagementApp.Contexts;
+using CaseManagementApp.Models;
 using CaseManagementApp.Models.Entities;
 
 namespace CaseManagementApp.Services
@@ -19,19 +20,18 @@ namespace CaseManagementApp.Services
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task AddUser(UserEntity newUser)
+        public async Task AddUser(User newUser)
         {
-            var userEntity = new UserEntity
+            var user = new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 Email = newUser.Email,
                 PhoneNumber = newUser.PhoneNumber,
-                UpdatedAt = newUser.UpdatedAt,
-                CreatedAt = DateTime.UtcNow
+
             };
 
-            _dataContext.Add(userEntity);
+            _dataContext.Add(user);
             await _dataContext.SaveChangesAsync();
         }
 
