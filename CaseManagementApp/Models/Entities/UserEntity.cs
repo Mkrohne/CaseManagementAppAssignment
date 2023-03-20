@@ -36,6 +36,6 @@ namespace CaseManagementApp.Models.Entities
 
         // Navigation property to CaseEntity
         public int CaseEntityId { get; set; }
-        public CaseEntity CaseEntity { get; set; }
+        public CaseEntity CaseEntity { get; set; } = null!;
     }
 }
