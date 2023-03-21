@@ -52,7 +52,12 @@ namespace CaseManagementApp.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CaseId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Cases");
                 });
@@ -62,12 +67,6 @@ namespace CaseManagementApp.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CaseEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -87,12 +86,7 @@ namespace CaseManagementApp.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("char(13)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CaseEntityId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -100,20 +94,20 @@ namespace CaseManagementApp.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CaseManagementApp.Models.Entities.UserEntity", b =>
+            modelBuilder.Entity("CaseManagementApp.Models.Entities.CaseEntity", b =>
                 {
-                    b.HasOne("CaseManagementApp.Models.Entities.CaseEntity", "CaseEntity")
-                        .WithMany("Users")
-                        .HasForeignKey("CaseEntityId")
+                    b.HasOne("CaseManagementApp.Models.Entities.UserEntity", "User")
+                        .WithMany("CasesEntity")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CaseEntity");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CaseManagementApp.Models.Entities.CaseEntity", b =>
+            modelBuilder.Entity("CaseManagementApp.Models.Entities.UserEntity", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("CasesEntity");
                 });
 #pragma warning restore 612, 618
         }

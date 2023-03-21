@@ -1,5 +1,7 @@
 ﻿using CaseManagementApp.Contexts;
+using CaseManagementApp.Models;
 using CaseManagementApp.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CaseManagementApp.Services
 {
@@ -12,30 +14,36 @@ namespace CaseManagementApp.Services
             _dataContext = dataContext;
         }
 
-        public async Task AddCase(CaseEntity newCase)
+        public async Task AddCase(Case newCase)
         {
-            newCase.Status = "Nytt";
-            _dataContext.Cases.Add(newCase);
+
+            CaseEntity entity = new CaseEntity();
+
+            entity.Title = newCase.Title;
+            entity.Description = newCase.Description;
+            entity.Status = newCase.Status;           
+            entity.CreatedBy = newCase.CreatedBy;
+            entity.CreationDate = newCase.CreationDate;
+
+            var _userEntity = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email == newCase.Email);
+            if (_userEntity != null)
+                entity.UserId = _userEntity.Id;
+            else
+                entity.User = new UserEntity 
+                {
+                    FirstName = newCase.FirstName,
+                    LastName = newCase.LastName,
+                    Email = newCase.Email,
+                    PhoneNumber = newCase.PhoneNumber,
+                };
+
+            _dataContext.Cases.AddAsync(entity);
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task AddUser(UserEntity newUser)
-        {
-            var userEntity = new UserEntity
-            {
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName,
-                Email = newUser.Email,
-                PhoneNumber = newUser.PhoneNumber,
-                UpdatedAt = newUser.UpdatedAt,
-                CreatedAt = DateTime.UtcNow
-            };
 
-            _dataContext.Add(userEntity);
-            await _dataContext.SaveChangesAsync();
-        }
 
-        public IEnumerable<CaseEntity> GetAllCases()
+    public IEnumerable<CaseEntity> GetAllCases()
         {
             return _dataContext.Cases.ToList();
         }
@@ -72,5 +80,7 @@ namespace CaseManagementApp.Services
             _dataContext.Cases.Remove(existingCase);
             await _dataContext.SaveChangesAsync();
         }
+
+
     }
 }

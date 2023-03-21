@@ -12,30 +12,28 @@ namespace CaseManagementApp.Models.Entities
 
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
 
         [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
         [Required]
         [EmailAddress]
         [StringLength(100)]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         [Phone]
         [Column(TypeName = "char(13)")]
         public string? PhoneNumber { get; set; }
 
-        [Required]
-        [Column(TypeName = "datetime")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        //[Required]
+        //[Column(TypeName = "datetime")]
+        //public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [Column(TypeName = "datetime")]
-        public DateTime? UpdatedAt { get; set; }
+        //[Column(TypeName = "datetime")]
+        //public DateTime? UpdatedAt { get; set; }
 
-        // Navigation property to CaseEntity
-        public int CaseEntityId { get; set; }
-        public CaseEntity CaseEntity { get; set; } = null!;
+        public ICollection<CaseEntity> CasesEntity { get; set; } = new HashSet<CaseEntity>();
     }
 }

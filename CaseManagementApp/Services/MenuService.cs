@@ -1,4 +1,5 @@
 ﻿using CaseManagementApp.Contexts;
+using CaseManagementApp.Models;
 using CaseManagementApp.Models.Entities;
 
 namespace CaseManagementApp.Services
@@ -6,60 +7,51 @@ namespace CaseManagementApp.Services
     internal class MenuService
     {
         private readonly CaseService _caseService;
+        private Case _case;
 
         public MenuService()
         {
             var dataContext = new DataContext();
             _caseService = new CaseService(dataContext);
+            _case = new Case();
         }
 
         public async Task CreateNewCaseAsync()
         {
+            
+
             Console.Clear();
             Console.WriteLine("Skapa nytt ärende");
             Console.WriteLine();
 
             // Fråga användaren efter titel och beskrivning av ärendet
             Console.Write("Titel På Ärendet: ");
-            var title = Console.ReadLine();
+            _case.Title = Console.ReadLine();
 
             Console.Write("Beskrivning På Ärendet: ");
-            var description = Console.ReadLine();
+             _case.Description = Console.ReadLine();
 
             // Fråga användaren efter sitt för- och efternamn
             Console.Write("Ditt förnamn: ");
-            var firstName = Console.ReadLine();
+             _case.FirstName = Console.ReadLine();
 
             Console.Write("Ditt efternamn: ");
-            var lastName = Console.ReadLine();
+             _case.LastName = Console.ReadLine();
 
-            Console.WriteLine("Din Epostadress: ");
-            var email = Console.ReadLine();
+            Console.Write("Din Epostadress: ");
+             _case.Email = Console.ReadLine();
 
-            Console.WriteLine("Ditt Telefonnummer: ");
-            var phonenumber = Console.ReadLine();
+            Console.Write("Ditt Telefonnummer: ");
+             _case.PhoneNumber = Console.ReadLine();
 
-            var UpdatedAt = DateTime.Now;
+             _case.CreationDate = DateTime.Now;
+            _case.Status = "Nytt";
+            _case.CreatedBy = _case.FirstName +" "+ _case.LastName;
 
-            // Skapa ett nytt CaseEntity-objekt med användarens inmatade data
-            var newCase = new CaseEntity
-            {
-                Title = title ?? "",
-                Description = description ?? "",
-                CreatedBy = $"{firstName} {lastName}"
-            };
 
-            var newUser = new UserEntity
-            {
-                FirstName = firstName ?? "",
-                LastName = lastName ?? "",
-                Email = email ?? "",
-                PhoneNumber = phonenumber ?? ""
-            };
 
             // Lägg till ärendet i databasen
-            await _caseService.AddCase(newCase);
-            await _caseService.AddUser(newUser);
+            await _caseService.AddCase(_case);
 
             Console.Clear();
             Console.WriteLine();
@@ -85,7 +77,7 @@ namespace CaseManagementApp.Services
                     Console.WriteLine($"Skapad av: {caseItem.CreatedBy}");
                     Console.WriteLine($"Status: {caseItem.Status}");
                     Console.WriteLine($"Skapad datum: {DateTime.Parse(caseItem.CreationDate.ToString()).ToShortDateString()}");
-                    Console.WriteLine($"Uppdaterad datum: {(caseItem.UpdatedAt == null ? "N/A" : DateTime.Parse(caseItem.UpdatedAt.ToString()).ToShortDateString())}");
+                    Console.WriteLine($"Uppdaterad datum: {(caseItem.UpdatedAt != null ? DateTime.Parse(caseItem.UpdatedAt.ToString()).ToShortDateString() : "N/A")}");
                     Console.WriteLine();
                 }
             }
@@ -139,7 +131,13 @@ namespace CaseManagementApp.Services
 
             // Be användaren mata in id för det ärende som ska uppdateras
             Console.Write("Ange id för ärendet som ska uppdateras: ");
-            var id = int.Parse(Console.ReadLine());
+            var input = (Console.ReadLine());
+            if (!int.TryParse(input, out int id))
+            {
+                Console.Clear();
+                Console.WriteLine("Ogiltigt ID");
+                return;
+            }
 
             // Hämta ärendet från databasen
             var existingCase = _caseService.GetCaseById(id);
